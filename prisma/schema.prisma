@@ -9,3 +9,26 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+// model invoice_products{
+//   id BigInt @id @default(autoincrement())
+//   invoice_id BigInt
+//   product_id BigInt
+//   user_id BigInt
+//   qty String
+//   sale_price String
+//   created_at DateTime @default(now())
+//   Updated_at DateTime @updatedAt
+// }
+
+
+model InvoiceProduct { // Renamed to follow Prisma naming conventions (singular and PascalCase)
+  id         BigInt    @id @default(autoincrement())
+  invoice_id BigInt
+  product_id BigInt
+  user_id    BigInt
+  qty        Int       // Assuming qty is an integer
+  sale_price Decimal   // Assuming sale_price is a decimal or numeric type
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt // Corrected to `updated_at` in PascalCase
+}
