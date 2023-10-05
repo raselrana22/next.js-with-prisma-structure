@@ -10,25 +10,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model invoice_products{
-//   id BigInt @id @default(autoincrement())
-//   invoice_id BigInt
-//   product_id BigInt
-//   user_id BigInt
-//   qty String
-//   sale_price String
-//   created_at DateTime @default(now())
-//   Updated_at DateTime @updatedAt
+// User table
+model users {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName  String
+  lastName   String
+  email      String    @unique
+  mobile     String
+  password   String
+  otp        String
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0) @updatedAt
+
+  // Define the relationship with `customers` table
+  customers   customers[] // You can use the related field without specifying onDelete or onUpdate
+}
+
+// Customers table
+model customers {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String
+  email      String
+  mobile     String
+  userId     BigInt    @db.UnsignedBigInt  // Foreign key
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0) @updatedAt
+  
+  // Define the relationship with `users` table
+  user       users      @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+}
+
+
+// //Category table
+// model categories{
+//   id         BigInt    @id
+//   name       String
+//   user_id    BigInt
+//   created_at DateTime  @default(now())
+//   updated_at DateTime  @updatedAt 
+// }
+
+// //Invoices table
+// model invoices{
+//   id          BigInt @id
+//   total       String
+//   discount    String
+//   vat         String
+//   payable     String
+//   user_id     BigInt
+//   customer_id BigInt
+//   created_at  DateTime  @default(now())
+//   updated_at  DateTime  @updatedAt 
+// }
+
+// //Product table
+// model products{
+//   id          BigInt @id
+//   user_id     BigInt
+//   category_id BigInt
+//   name        String
+//   price       String
+//   unit        String
+//   img_url     String
+//   created_at  DateTime  @default(now())
+//   updated_at  DateTime  @updatedAt 
 // }
 
 
-model InvoiceProduct { // Renamed to follow Prisma naming conventions (singular and PascalCase)
-  id         BigInt    @id @default(autoincrement())
-  invoice_id BigInt
-  product_id BigInt
-  user_id    BigInt
-  qty        Int       // Assuming qty is an integer
-  sale_price Decimal   // Assuming sale_price is a decimal or numeric type
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt // Corrected to `updated_at` in PascalCase
-}
+// // Propducts invoices table
+// model invoice_product { // Renamed to follow Prisma naming conventions (singular and PascalCase)
+//   id         BigInt    @id
+//   invoice_id BigInt
+//   product_id BigInt
+//   user_id    BigInt
+//   qty        String       
+//   sale_price String   
+//   created_at DateTime  @default(now())
+//   updated_at DateTime  @updatedAt 
+// }
